@@ -1,0 +1,60 @@
+# !!!! YOU NEED TO CHANGE THIS !!!!
+# This is the connection string for your database
+ConnStr = "dbname=grpc host=127.0.0.1 sslmode=disable user=$GRPCDBUSER password=$GRPCDBPASS"
+
+DBType = "postgres"
+
+Schemas = ["public"]
+
+PluginDirs = ["./gnorm/plugin"]
+
+NameConversion = "{{pascal .}}"
+
+ExcludeTables = ["schema_version"]
+
+# You need clang-format installed for this to work
+PostRun = ["clang-format", "-i", "-style", "{BasedOnStyle: Google, ColumnLimit: 132, AlignConsecutiveAssignments: true, AlignConsecutiveDeclarations: true}", "$GNORMFILE"]
+
+OutputDir = "./generated"
+
+[SchemaPaths]
+"generated.proto" = "./gnorm_templates/proto.gotmpl"
+
+[TypeMap]
+"bigint"                   = "int64"                     # Go: "int64"
+"boolean"                  = "bool"                      # Go: "bool"
+"bytea"                    = "bytes"                     # Go: "[]byte"
+"character"                = "string"                    # Go: "string"
+"character varying"        = "string"                    # Go: "string"
+"date"                     = "google.protobuf.Timestamp" # Go: "time.Time"
+"float4"                   = "float"                     # Go: "float32"
+"float8"                   = "double"                    # Go: "float64"
+"integer"                  = "int32"                     # Go: "int32"
+"jsonb"                    = "bytes"                     # Go: "pgtype.JSONB"
+"text"                     = "string"                    # Go: "string"
+"timestamp with time zone" = "google.protobuf.Timestamp" # Go: "time.Time"
+"tsvector"                 = "string"                    # Go: "string"
+"uuid"                     = "string"                    # Go: "string"
+# enums: These must be kept in sync with the database schema
+"book_type"     = "BookType"
+
+[NullableTypeMap]
+"bigint"                   = "google.protobuf.Int64Value"  # Go: "pgtype.Int8"
+"boolean"                  = "google.protobuf.BoolValue"   # Go: "pgtype.Bool"
+"bytea"                    = "google.protobuf.BytesValue"  # Go: "pgtype.Bytea"
+"character"                = "google.protobuf.StringValue" # Go: "pgtype.Text"
+"character varying"        = "google.protobuf.StringValue" # Go: "pgtype.Text"
+"date"                     = "google.protobuf.Timestamp"   # Go: "pgtype.Date"
+"float4"                   = "google.protobuf.FloatValue"  # Go: "pgtype.Float4"
+"float8"                   = "google.protobuf.DoubleValue" # Go: "pgtype.Float8"
+"integer"                  = "google.protobuf.Int32Value"  # Go: "pgtype.Int4"
+"jsonb"                    = "google.protobuf.BytesValue"  # Go: "pgtype.JSONB"
+"text"                     = "google.protobuf.StringValue" # Go: "pgtype.Text"
+"timestamp with time zone" = "google.protobuf.Timestamp"   # Go: "pgtype.Timestamptz"
+"tsvector"                 = "google.protobuf.StringValue" # Go: "pgtype.Text"
+"uuid"                     = "google.protobuf.StringValue" # GO: "pgtype.Text"
+
+[Params]
+RootPkg    = "generated"
+RootImport = "github.com/gnormal/gRPC/generated"
+GRPCService = "GeneratedService"
